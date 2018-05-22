@@ -8,7 +8,7 @@ from scrapy.spiders import Rule
 from Crawler.util import *
 from Crawler.items import NewsItem
 
-class SinaNewsSpider(CrawlSpider):
+class TbTibetSpider(CrawlSpider):
     name = 'tb_tibet'
     allowed_domains = [
         'tb.tibet.cn'
@@ -43,8 +43,8 @@ class SinaNewsSpider(CrawlSpider):
         url = response.request.url
         if re.match(r'.*?/\d{6}/.*?', url):
 
-            print('---------------------')
-            print(url)
+            # print('---------------------')
+            # print(url)
 
             content = response.xpath('//*[@id="contentK"]/div[3]//div//text()').extract()
             # print(content)
@@ -53,7 +53,7 @@ class SinaNewsSpider(CrawlSpider):
             if editor:
                 content.remove(editor)
             publish_time = sel.re(r'\d{4}-\d{2}-\d{2}')[0]
-            print(publish_time)
+            # print(publish_time)
             if ' ' in publish_time:
                 publish_time = publish_time.replace(' ', '')
 
@@ -72,10 +72,10 @@ class SinaNewsSpider(CrawlSpider):
                     source=sel.css('#contentK > div.xinxi > span:nth-child(2)::text').extract_first(),
                     author=sel.css('#contentK > div.xinxi > span:nth-child(3)::text').extract_first()
                 )
-                print(item.get("title", None))
-                print(item.get("timeofpublish", None))
-                print(item.get("source", None))
-                print(item.get("author", None))
+                # print(item.get("title", None))
+                # print(item.get("timeofpublish", None))
+                # print(item.get("source", None))
+                # print(item.get("author", None))
                 # yield item
                 item = judge_time_news(item)
                 if item:

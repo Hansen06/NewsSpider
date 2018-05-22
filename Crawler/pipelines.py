@@ -14,7 +14,7 @@ from Crawler.util import RedisFactory
 
 class CrawlerPipeline(object):
     def __init__(self):
-        self.file = open('items.jl', 'w', encoding='utf-8')
+        # self.file = open('items.jl', 'w', encoding='utf-8')
         self.url_seen = set()
         # self.redis = RedisFactory('url')
 
@@ -25,7 +25,7 @@ class CrawlerPipeline(object):
             self.url_seen.add(item['url'])
             # self.redis.insert(item['url'])
             line = json.dumps(dict(item), ensure_ascii=False)+"\n"
-            self.file.write(line)
+            # self.file.write(line)
             # 写入文档中
             path = item['chinesename'] + '\\'  # +item['domainname'].replace('http://', '')+'\\'
             time_str = item['timeofpublish'][:10]

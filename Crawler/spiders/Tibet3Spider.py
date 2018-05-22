@@ -8,7 +8,7 @@ from scrapy.spiders import Rule
 from Crawler.util import *
 from Crawler.items import NewsItem
 
-class SinaNewsSpider(CrawlSpider):
+class TiTibet3Spider(CrawlSpider):
     name = 'tibet_tibet3'
     allowed_domains = [
         'ti.tibet3.com'

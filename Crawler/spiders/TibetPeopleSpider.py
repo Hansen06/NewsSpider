@@ -9,7 +9,7 @@ from Crawler.util import *
 from Crawler.items import NewsItem
 
 
-class UyghurcctvspiderSpider(CrawlSpider):
+class TibetPeopleSpider(CrawlSpider):
     name = 'tibet_people'
     allowed_domains = [
     					'tibet.people.com.cn'
