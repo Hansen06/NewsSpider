@@ -19,7 +19,7 @@ def get_people_allow_url():
     if start_time.year == NOW.year:
         if start_time.month == NOW.month:
             for x in range(start_time.day, NOW.day + 1):
-                string = str(start_time.strftime('%m')) + (str(x) if x >= 10 else '0' + str(x))
+                string = str(start_time.strftime('%m')) + (str(x) if x >= 10 else '0' + str(x)) #0714 0707    x<10 补0 组成两位
                 allow_url.append('.*?/%d/%s/.*?' % (start_time.year, string))
         else:
             for x in range(start_time.month, NOW.month + 1):

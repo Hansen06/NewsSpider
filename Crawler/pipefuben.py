@@ -27,19 +27,19 @@ class CrawlerPipeline(object):
             line = json.dumps(dict(item), ensure_ascii=False)+"\n"
             self.file.write(line)
             # 写入文档中
-            path = item['chinesename'] + '\\'  # +item['domainname'].replace('http://', '')+'\\'
+            path = 'Uyghur\\'  # +item['domainname'].replace('http://', '')+'\\'
             time_str = item['timeofpublish'][:10]
             if '年' in time_str:
-                time_str = datetime.datetime.strptime(item['timeofpublish'], "%Y年%m月%d日%H:%M").strftime('%Y-%m-%d')
+                time_str = datetime.datetime.strptime(time_str, "%Y年%m月%d日%H:%M").strftime('%Y-%m-%d')
             m = re.search(r'\d{4}-\d{2}-\d{2}', time_str)
             if m:
                 time_str = m.group(0)
-            time_path = time_str.replace('-', '\\')
-            path = SAVE_PATH + path + time_path + '\\'
+            time_path = time_str.replace('.', '\\')
+            path = SAVE_PATH+path+time_path+'\\'
             if not os.path.exists(path):
                 os.makedirs(path)
             url = item['url'].replace('http:/', '_').replace('/', '_').replace(':', '')
-            filename = '0_' + spider.name + '_' + time_str + url+'.json'
+            filename = '0_'+spider.name+'_'+time_str+url+'.json'
             file1 = open(path+filename, 'w', encoding='utf-8')
             file1.write(line)
             file1.close()
