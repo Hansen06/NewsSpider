@@ -10,7 +10,8 @@ import re
 import os
 import pymongo
 from Crawler.util import RedisFactory
-
+from Crawler.items import NewsItem, CommentItem
+from Crawler.items import TweetsItem, InformationItem, FollowsItem, FansItem
 
 class CrawlerPipeline(object):
     def __init__(self):
@@ -49,9 +50,38 @@ class CrawlerPipeline(object):
         self.file.close()
 
 
+class MongoDBPipleline(object):
+    def __init__(self):
+        clinet = pymongo.MongoClient("localhost", 27017)
+        db = clinet["Sina"]
+        self.Information = db["Information"]
+        self.Tweets = db["Tweets"]
+        self.Follows = db["Follows"]
+
+    def process_item(self, item, spider):
+        """ 判断item的类型，并作相应的处理，再入数据库 """
+        if isinstance(item, InformationItem):
+            try:
+                self.Information.insert(dict(item))
+            except Exception:
+                pass
+        elif isinstance(item, TweetsItem):
+            try:
+                self.Tweets.insert(dict(item))
+            except Exception:
+                pass
+        elif isinstance(item, FollowsItem):
+            try:
+                self.Follows.insert(dict(item))
+            except Exception:
+                pass
+        return item
+
+
 class MongoPipeline(object):
 
-    collection_name = 'all_news'
+    db_name = 'all_news'
+    db_comment = 'all_comments'
 
     def __init__(self, mongo_uri, mongo_db):
         self.mongo_uri = mongo_uri
@@ -61,7 +91,7 @@ class MongoPipeline(object):
     def from_crawler(cls, crawler):
         return cls(
             mongo_uri=crawler.settings.get('MONGO_URI'),
-            mongo_db=crawler.settings.get('MONGO_DATABASE', 'items')
+            mongo_db=crawler.settings.get('MONGO_DATABASE')
         )
 
     def open_spider(self, spider):
@@ -72,5 +102,11 @@ class MongoPipeline(object):
         self.client.close()
 
     def process_item(self, item, spider):
-        self.db[self.collection_name].insert(dict(item))
-        return item
+        if isinstance(item, NewsItem):
+            key = {'url': item['url']}
+            self.db[self.db_name].update(key, dict(item), upsert=True)
+            return item
+        elif isinstance(item, CommentItem):
+            key = {'url': item['url']}
+            self.db[self.db_comment].update(key, dict(item), upsert=True)
+            return 'comments of ' + item['url']
